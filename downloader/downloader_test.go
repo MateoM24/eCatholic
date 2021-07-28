@@ -4,6 +4,7 @@ import (
 	"github.com/MateoM24/eCatholic/model"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestDownloadData(t *testing.T) {
@@ -63,8 +64,17 @@ func validate15thCandidate(candidate model.Candidate, t *testing.T) {
 	if candidate.Processor != "Stripe" {
 		t.Fatalf("Expected processor: Stripe but got %v", candidate.Processor)
 	}
-	if candidate.Memo != "" {
-		t.Fatalf("Expected memo to be blanc but got %v", candidate.Memo)
+	if candidate.ImportDate == ""  {
+		t.Fatalf("Expected import date not to be blank")
+	}
+}
+
+func TestGetFormattedDate(t *testing.T) {
+	location, _ := time.LoadLocation("Local")
+	date := time.Date(2021, 7, 28, 10, 10, 10, 10, location)
+	expected := "07-28-2021"
+	if getFormattedDate(date) != expected {
+		t.Fatalf("Failed to format date correctly. Expected: %v, got: %v", expected, getFormattedDate(date))
 	}
 }
 

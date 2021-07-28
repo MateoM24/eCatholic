@@ -2,8 +2,10 @@ package downloader
 
 import (
 	"encoding/csv"
+	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/MateoM24/eCatholic/model"
 )
@@ -54,8 +56,12 @@ func mapToModel(reader io.Reader) ([]model.Candidate, error) {
 			Mobile:    row[8],
 			Amount:    row[9],
 			Processor: row[10],
-			Memo:      row[11],
+			ImportDate: getFormattedDate(time.Now()),
 		})
 	}
 	return candidates, nil
+}
+
+func getFormattedDate(date time.Time) string {
+	return fmt.Sprintf("%02d-%02d-%04d", date.Month(), date.Day(), date.Year())
 }

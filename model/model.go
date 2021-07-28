@@ -12,6 +12,6 @@ type Candidate struct {
 	Mobile string
 	Amount string
 	Processor string
-	Memo string
+	ImportDate string
 }
 
