@@ -10,6 +10,8 @@ import (
 	"github.com/MateoM24/eCatholic/model"
 )
 
+const MISSING = "missing"
+
 func FetchCandidates(url string) ([]model.Candidate, error) {
 	data, err := downloadData(url)
 	if err != nil {
@@ -45,21 +47,28 @@ func mapToModel(reader io.Reader) ([]model.Candidate, error) {
 		}
 		candidates = append(candidates,
 		model.Candidate{
-			Date:      row[0],
-			Name:      row[1],
-			Address:   row[2],
-			Address2:  row[3],
-			City:      row[4],
-			State: 	   row[5],
-			Zipcode:   row[6],
-			Telephone: row[7],
-			Mobile:    row[8],
-			Amount:    row[9],
-			Processor: row[10],
+			Date:      replaceIfBlank(row[0]),
+			Name:      replaceIfBlank(row[1]),
+			Address:   replaceIfBlank(row[2]),
+			Address2:  replaceIfBlank(row[3]),
+			City:      replaceIfBlank(row[4]),
+			State: 	   replaceIfBlank(row[5]),
+			Zipcode:   replaceIfBlank(row[6]),
+			Telephone: replaceIfBlank(row[7]),
+			Mobile:    replaceIfBlank(row[8]),
+			Amount:    replaceIfBlank(row[9]),
+			Processor: replaceIfBlank(row[10]),
 			ImportDate: getFormattedDate(time.Now()),
 		})
 	}
 	return candidates, nil
+}
+
+func replaceIfBlank(value string) string {
+	if value == "" {
+		return MISSING
+	}
+	return value
 }
 
 func getFormattedDate(date time.Time) string {

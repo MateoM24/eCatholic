@@ -40,7 +40,7 @@ func validate15thCandidate(candidate model.Candidate, t *testing.T) {
 	if candidate.Address != "2483 Farland Avenue" {
 		t.Fatalf("Expected address: 2483 Farland Avenue but got %v", candidate.Address)
 	}
-	if candidate.Address2 != "" {
+	if candidate.Address2 != MISSING {
 		t.Fatalf("Expected address2 to be blank but got %v", candidate.Address2)
 	}
 	if candidate.City != "Warrensburg" {
