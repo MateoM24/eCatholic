@@ -46,22 +46,36 @@ func mapToModel(reader io.Reader) ([]model.Candidate, error) {
 			continue
 		}
 		candidates = append(candidates,
-		model.Candidate{
-			Date:      replaceIfBlank(row[0]),
-			Name:      replaceIfBlank(row[1]),
-			Address:   replaceIfBlank(row[2]),
-			Address2:  replaceIfBlank(row[3]),
-			City:      replaceIfBlank(row[4]),
-			State: 	   replaceIfBlank(row[5]),
-			Zipcode:   replaceIfBlank(row[6]),
-			Telephone: replaceIfBlank(row[7]),
-			Mobile:    replaceIfBlank(row[8]),
-			Amount:    replaceIfBlank(row[9]),
-			Processor: replaceIfBlank(row[10]),
-			ImportDate: getFormattedDate(time.Now()),
-		})
+			model.Candidate{
+				Date:       replaceIfBlank(row[0]),
+				Name:       replaceIfBlank(row[1]),
+				Address:    replaceIfBlank(row[2]),
+				Address2:   replaceIfBlank(row[3]),
+				City:       replaceIfBlank(row[4]),
+				State:      replaceIfBlank(row[5]),
+				Zipcode:    replaceIfBlank(row[6]),
+				Telephone:  replaceIfBlank(row[7]),
+				Mobile:     replaceIfBlank(row[8]),
+				Amount:     replaceIfBlank(row[9]),
+				Processor:  replaceIfBlank(row[10]),
+				ImportDate: getFormattedDate(time.Now()),
+			})
 	}
 	return candidates, nil
+}
+
+func removeDuplicates(candidates []model.Candidate) []model.Candidate {
+	var uniqueCandidates []model.Candidate
+candidatesLoop:
+	for _, candidate := range candidates {
+		for _, uniqueCandidate := range uniqueCandidates {
+			if uniqueCandidate.Equals(candidate) {
+				continue candidatesLoop
+			}
+		}
+		uniqueCandidates = append(uniqueCandidates, candidate)
+	}
+	return uniqueCandidates
 }
 
 func replaceIfBlank(value string) string {

@@ -7,6 +7,12 @@ import (
 	"time"
 )
 
+type testData struct {
+	scenario   string
+	candidates []model.Candidate
+	unique     int
+}
+
 func TestDownloadData(t *testing.T) {
 	_, err := downloadData("https://s3.amazonaws.com/ecatholic-hiring/data.csv")
 	if err != nil {
@@ -64,7 +70,7 @@ func validate15thCandidate(candidate model.Candidate, t *testing.T) {
 	if candidate.Processor != "Stripe" {
 		t.Fatalf("Expected processor: Stripe but got %v", candidate.Processor)
 	}
-	if candidate.ImportDate == ""  {
+	if candidate.ImportDate == "" {
 		t.Fatalf("Expected import date not to be blank")
 	}
 }
@@ -78,4 +84,197 @@ func TestGetFormattedDate(t *testing.T) {
 	}
 }
 
+func TestRemoveDuplicatesNoField(t *testing.T) {
+	for _, test := range getTestData() {
+		uniqueCandidates := removeDuplicates(test.candidates)
+		if len(uniqueCandidates) != test.unique {
+			t.Fatalf("Test scenario: %v\nExpected %v unique candidates but got: %v",
+				test.scenario, test.unique, len(uniqueCandidates))
+		}
+	}
+}
 
+func getTestData() []testData {
+	return []testData{
+		testData{
+			scenario: "same date",
+			candidates: []model.Candidate{
+				{
+					Date: "01/01/2021",
+				},
+				{
+					Date: "02/01/2021",
+				},
+				{
+					Date: "02/01/2021",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same name",
+			candidates: []model.Candidate{
+				{
+					Name: "Joe",
+				},
+				{
+					Name: "Jenny",
+				},
+				{
+					Name: "Joe",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same address",
+			candidates: []model.Candidate{
+				{
+					Address: "2st Street",
+				},
+				{
+					Address: "1st Street",
+				},
+				{
+					Address: "1st Street",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same address2",
+			candidates: []model.Candidate{
+				{
+					Address2: "Flat 1",
+				},
+				{
+					Address2: "Flat 2",
+				},
+				{
+					Address2: "Flat 1",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same city",
+			candidates: []model.Candidate{
+				{
+					City: "Huston",
+				},
+				{
+					City: "Chicago",
+				},
+				{
+					City: "Chicago",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same state",
+			candidates: []model.Candidate{
+				{
+					State: "TX",
+				},
+				{
+					State: "TX",
+				},
+				{
+					State: "WA",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same zip code",
+			candidates: []model.Candidate{
+				{
+					Zipcode: "123",
+				},
+				{
+					Zipcode: "321",
+				},
+				{
+					Zipcode: "321",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same telephone",
+			candidates: []model.Candidate{
+				{
+					Telephone: "123456789",
+				},
+				{
+					Telephone: "123456789",
+				},
+				{
+					Telephone: "987654321",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same mobile",
+			candidates: []model.Candidate{
+				{
+					Mobile: "123456789",
+				},
+				{
+					Mobile: "123456789",
+				},
+				{
+					Mobile: "987654321",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same amount",
+			candidates: []model.Candidate{
+				{
+					Amount: "$50",
+				},
+				{
+					Amount: "$50",
+				},
+				{
+					Amount: "$51",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same processor",
+			candidates: []model.Candidate{
+				{
+					Processor: "Stripe",
+				},
+				{
+					Processor: "Paypal",
+				},
+				{
+					Processor: "Paypal",
+				},
+			},
+			unique: 2,
+		},
+		testData{
+			scenario: "same import date should be ok",
+			candidates: []model.Candidate{
+				{
+					ImportDate: "01/01/2021",
+				},
+				{
+					ImportDate: "02/01/2021",
+				},
+				{
+					ImportDate: "03/01/2021",
+				},
+			},
+			unique: 1,
+		},
+	}
+}
