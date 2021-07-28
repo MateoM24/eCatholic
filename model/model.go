@@ -1,18 +1,18 @@
 package model
 
 type Candidate struct {
-	Date       string
-	Name       string
-	Address    string
-	Address2   string
-	City       string
-	State      string
-	Zipcode    string
-	Telephone  string
-	Mobile     string
-	Amount     string
-	Processor  string
-	ImportDate string
+	Date       string `json:"date"`
+	Name       string `json:"name"`
+	Address    string `json:"address"`
+	Address2   string `json:"address2"`
+	City       string `json:"city"`
+	State      string `json:"state"`
+	ZipCode    string `json:"zipCode"`
+	Telephone  string `json:"telephone"`
+	Mobile     string `json:"mobile"`
+	Amount     string `json:"amount"`
+	Processor  string `json:"processor"`
+	ImportDate string `json:"importDate"`
 }
 
 /*Equals method checks if the given candidate and the other one are equal.
@@ -38,7 +38,7 @@ func (c *Candidate) Equals(o Candidate) bool {
 	if c.State != o.State {
 		return false
 	}
-	if c.Zipcode != o.Zipcode {
+	if c.ZipCode != o.ZipCode {
 		return false
 	}
 	if c.Telephone != o.Telephone {

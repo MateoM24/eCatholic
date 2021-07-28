@@ -11,7 +11,9 @@ import (
 )
 
 const MISSING = "missing"
-
+/*FetchCandidates gets source data from given url. It expects it points to csv file.
+Fetched data is transformed and cleaned. Missing data is marked and import date is added
+Returns candidates with no duplicates*/
 func FetchCandidates(url string) ([]model.Candidate, error) {
 	data, err := downloadData(url)
 	if err != nil {
@@ -53,7 +55,7 @@ func mapToModel(reader io.Reader) ([]model.Candidate, error) {
 				Address2:   replaceIfBlank(row[3]),
 				City:       replaceIfBlank(row[4]),
 				State:      replaceIfBlank(row[5]),
-				Zipcode:    replaceIfBlank(row[6]),
+				ZipCode:    replaceIfBlank(row[6]),
 				Telephone:  replaceIfBlank(row[7]),
 				Mobile:     replaceIfBlank(row[8]),
 				Amount:     replaceIfBlank(row[9]),

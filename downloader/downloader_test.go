@@ -55,8 +55,8 @@ func validate15thCandidate(candidate model.Candidate, t *testing.T) {
 	if candidate.State != "MO" {
 		t.Fatalf("Expected state: MO but got %v", candidate.State)
 	}
-	if candidate.Zipcode != "64093" {
-		t.Fatalf("Expected zip code: 64093 but got %v", candidate.Zipcode)
+	if candidate.ZipCode != "64093" {
+		t.Fatalf("Expected zip code: 64093 but got %v", candidate.ZipCode)
 	}
 	if candidate.Telephone != "443-323-6215" {
 		t.Fatalf("Expected telephone: 443-323-6215 but got %v", candidate.Telephone)
@@ -190,13 +190,13 @@ func getTestData() []testData {
 			scenario: "same zip code",
 			candidates: []model.Candidate{
 				{
-					Zipcode: "123",
+					ZipCode: "123",
 				},
 				{
-					Zipcode: "321",
+					ZipCode: "321",
 				},
 				{
-					Zipcode: "321",
+					ZipCode: "321",
 				},
 			},
 			unique: 2,
