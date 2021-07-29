@@ -65,7 +65,7 @@ func handleNot200Status(response *http.Response) (status int, e error){
 	var bodyString string
 	if body != nil {
 		bodyBytes, e := ioutil.ReadAll(body)
-		if e != nil {
+		if e == nil {
 			bodyString = string(bodyBytes)
 		}
 		defer body.Close()

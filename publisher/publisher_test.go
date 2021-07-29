@@ -8,8 +8,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
 )
+
+const responseBody = "Internal server error with additional info"
 
 
 func TestPublishPaymentData200Response(t *testing.T) {
@@ -57,13 +60,16 @@ func TestPublishPaymentDataResponseErrorResponseNoBody(t *testing.T) {
 	if err.Error() == "" {
 		t.Fatalf("Expected to get error message but didn't")
 	}
+
+	if strings.Index(err.Error(), responseBody) != -1 {
+		t.Fatalf("Expected not to include text from response body")
+	}
 }
 
 func TestPublishPaymentDataResponseErrorResponseWithBody(t *testing.T) {
 	config := getTestConfig()
 
 	Client = &MockHttpClient{PostDoFunc: func(req *http.Request) (*http.Response, error) {
-		responseBody := "Internal server error with additional info"
 		return &http.Response{
 			Status:        "500 Internal Server Error",
 			StatusCode:    500,
@@ -91,6 +97,9 @@ func TestPublishPaymentDataResponseErrorResponseWithBody(t *testing.T) {
 		t.Fatalf("Expected to get error message but didn't")
 	}
 
+	if strings.Index(err.Error(), responseBody) == -1 {
+		t.Fatalf("Expected to include text from response body")
+	}
 }
 
 func verifyHeaders(req *http.Request, config ServerConfig) (*http.Response, error){
